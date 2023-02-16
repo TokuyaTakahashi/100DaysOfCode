@@ -11,8 +11,8 @@ running = True
 while running:
     request = input(f"What would you like? ({drink_menu.get_items()}): ")
     if request == "report":
-        print(coffee_machine.report())
-        print(money.report())
+        coffee_machine.report()
+        money.report()
     elif request == "off":
         running = False
     else:
