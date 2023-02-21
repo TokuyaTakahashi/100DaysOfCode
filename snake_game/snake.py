@@ -1,18 +1,31 @@
 from turtle import Turtle
+START_POS = [(0, 0), (-20, 0), (-40, 0)]
+UP = 90
+DOWN = 270
+LEFT = 180
+RIGHT = 0
 
 
 class Snake:
 
     def __init__(self):
         self.snake_seg = []
-        self.start_pos = [(-40, 0), (-20, 0), (0, 0)]
-        for index in range(3):
-            segment = Turtle(shape="square")
-            segment.color("white")
-            segment.pu()
-            segment.goto(self.start_pos[index])
-            self.snake_seg.append(segment)
+        self.create_snake()
         self.head = self.snake_seg[0]
+
+    def create_snake(self):
+        for position in START_POS:
+            self.add_segment(position)
+
+    def add_segment(self, position):
+        segment = Turtle(shape="square")
+        segment.color("white")
+        segment.pu()
+        segment.goto(position)
+        self.snake_seg.append(segment)
+
+    def extend(self):
+        self.add_segment(self.snake_seg[-1].position())
 
     def move(self):
         for index in range(len(self.snake_seg) - 1, 0, -1):
@@ -22,13 +35,13 @@ class Snake:
         self.head.forward(20)
 
     def left(self):
-        self.head.setheading(180)
+        self.head.setheading(LEFT)
 
     def right(self):
-        self.head.setheading(0)
+        self.head.setheading(RIGHT)
 
     def up(self):
-        self.head.setheading(90)
+        self.head.setheading(UP)
 
     def down(self):
-        self.head.setheading(270)
+        self.head.setheading(DOWN)
