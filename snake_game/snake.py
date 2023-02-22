@@ -34,6 +34,13 @@ class Snake:
             self.snake_seg[index].goto(x_move, y_move)
         self.head.forward(20)
 
+    def reset(self):
+        for seg in self.snake_seg:
+            seg.goto(1000,1000)
+        self.snake_seg.clear()
+        self.create_snake()
+        self.head = self.snake_seg[0]
+
     def left(self):
         self.head.setheading(LEFT)
 
