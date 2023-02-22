@@ -13,21 +13,33 @@ class Scoreboard(Turtle):
         self.hideturtle()
         self.pu()
         self.draw_score()
-        self.draw_line()
+        # self.draw_line()
 
     def draw_line(self):
-        self.pu()
-        self.goto(0, -250)
-        self.setheading(90)
-        self.width(5)
-        while self.ycor() < 250:
-            self.pendown()
-            self.forward(40)
-            self.pu()
-            self.forward(40)
+        line = Turtle()
+        line.hideturtle()
+        line.shape('square')
+        line.pencolor('white')
+        line.pu()
+        line.goto(0, -250)
+        line.setheading(90)
+        line.width(5)
+        while line.ycor() < 250:
+            line.pendown()
+            line.forward(40)
+            line.pu()
+            line.forward(40)
 
     def draw_score(self):
         self.goto(-100, 150)
         self.write(f"{self.score_one}", align='center', font=FONT)
         self.goto(100, 150)
         self.write(f"{self.score_two}", align='center', font=FONT)
+
+    def add_point(self, name):
+        self.clear()
+        if name == "pad_one":
+            self.score_one += 1
+        else:
+            self.score_two += 1
+        self.draw_score()
