@@ -17,6 +17,9 @@ while len(guessed_state) < 50:
     answer_state = screen.textinput(title=f"{len(guessed_state)}/50 States Correct",
                                     prompt="What's another state's name?").title()
     if answer_state == 'Exit':
+        missing_states = [state for state in state_arr if state not in guessed_state]
+        states_to_learn = {'states missed': missing_states}
+        pandas.DataFrame(states_to_learn).to_csv('states_to_learn.csv')
         break
     if answer_state in state_arr:
         state_x_pos = int(data[data['state'] == answer_state].x)
@@ -25,6 +28,4 @@ while len(guessed_state) < 50:
         state_arr.pop(state_arr.index(answer_state))
         guessed_state.append(answer_state)
 
-states_to_learn = {'states missed': state_arr}
-pandas.DataFrame(states_to_learn).to_csv('states_to_learn.csv')
 screen.exitonclick()
