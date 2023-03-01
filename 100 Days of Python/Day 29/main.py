@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+import json
 import random
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
@@ -32,6 +33,17 @@ def generate_password():
 
     pass_entry.delete(0, END)
     pass_entry.insert(0, password)
+# ---------------------------- SEARCH PASSWORD ------------------------------- #
+
+
+def search():
+    url = web_entry.get()
+    with open('data.json', 'r') as data_file:
+        data = json.load(data_file)
+
+    email = data[url]['email']
+    password = data[url]['password']
+    messagebox.showinfo(title=f'{url}', message=f'Email: {email}\nPassword: {password}')
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
 
@@ -40,15 +52,29 @@ def add():
     website = web_entry.get()
     email = email_entry.get()
     password = pass_entry.get()
+    new_data = {
+        website : {
+            "email" : email,
+            "password": password
+        }
+    }
 
     if len(password) != 0 and len(website) != 0:
-        is_ok = messagebox.askokcancel(title=f'Website: {website}',
-        message=f'These are the details entered:\nEmail: {email}\nPassword: {password}\nIs it ok to save?')
-        if is_ok:
-            with open('data.txt', 'a') as file:
-                file.write(f'{website} | {email} | {password}\n')
-                web_entry.delete(0,END)
-                pass_entry.delete(0,END)
+        try:
+            with open('data.json', 'r') as file:
+                # Reading old data
+                data = json.load(file)
+        except FileNotFoundError:
+            file = open('data.json', 'w')
+            json.dump(new_data, file, indent=4)
+        else:
+            data.update(new_data)
+            with open('data.json', 'w') as file:
+                # Saving updated data
+                json.dump(data, file, indent=4)
+        finally:
+            web_entry.delete(0, END)
+            pass_entry.delete(0, END)
     else:
         messagebox.showerror(title='Missing Inputs', message='Please fill all entries')
 # ---------------------------- UI SETUP ------------------------------- #
@@ -72,16 +98,18 @@ pass_label = Label(text='Password:')
 pass_label.grid(column=0, row=3)
 
 # Entry
-web_entry = Entry(width=52)
-web_entry.grid(column=1, row=1, columnspan=2, pady=5)
+web_entry = Entry(width=32)
+web_entry.grid(column=1, row=1, columnspan=2, pady=5, sticky=W)
 web_entry.focus()
 email_entry = Entry(width=52)
 email_entry.insert(0, "example@gmail.com")
 email_entry.grid(column=1, row=2, columnspan=2, pady=5)
-pass_entry = Entry(width=30)
+pass_entry = Entry(width=32)
 pass_entry.grid(column=1, row=3, pady=5, sticky=W)
 
 # Buttons
+search_pass = Button(text='Search', width=14, command=search)
+search_pass.grid(column=2, row=1)
 generate_pass = Button(text='Generate Password', width=15, command=generate_password)
 generate_pass.grid(column=2, row=3)
 add_pass = Button(text='Add', width=44, command=add)
